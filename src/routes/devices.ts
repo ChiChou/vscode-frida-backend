@@ -22,17 +22,28 @@ router.delete('/:host', async (ctx) => {
   const { host } = ctx.params;
   try {
     await manager.removeRemoteDevice(host);
-  } catch(e) {
+  } catch (e) {
     ctx.throw(404, e.message, { expose: true });
   }
   ctx.body = 'OK';
 });
 
-router.get('/:id/apps', async (ctx) => {
+type HandlerRoutine = (ctx: any, device: frida.Device) => any;
+
+const getDeviceByIdMiddleware = (handler: HandlerRoutine) => async (ctx) => {
   const { id } = ctx.params;
   const device = await (id === 'usb' ? frida.getUsbDevice() : frida.getDevice(id));
+  ctx.body = await handler(ctx, device);
+};
+
+router.get('/:id/apps', getDeviceByIdMiddleware(async (_ctx, device) => {
   const apps = await device.enumerateApplications();
-  ctx.body = apps.map(serializer.app);
-});
+  return apps.map(serializer.app);
+}));
+
+router.get('/:id/ps', getDeviceByIdMiddleware(async (_ctx, device) => {
+  const ps = await device.enumerateProcesses();
+  return ps.map(serializer.process);
+}));
 
 export default router;

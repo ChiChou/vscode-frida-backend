@@ -24,6 +24,8 @@ describe('frida backend', () => {
   it('should get apps and processes', async () => {
     const apps = await request.get('/device/usb/apps').expect(200);
     expect(apps.body).toBeInstanceOf(Array);
+    const ps = await request.get('/device/usb/ps').expect(200);
+    expect(ps.body).toBeInstanceOf(Array);
   })
 
   afterAll(async(done) => {

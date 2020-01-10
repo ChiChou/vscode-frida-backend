@@ -1,5 +1,6 @@
 import { Icon, Application, Device } from 'frida';
 import * as BMP from 'bmp-js';
+import { Process } from 'frida/dist/process';
 
 function toIcon(icon?: Icon): any {
   if (!icon) return icon;
@@ -7,6 +8,8 @@ function toIcon(icon?: Icon): any {
   const { pixels, height, width, rowstride } = icon;
   return { width, height, rowstride, pixels: pixels.toString('base64') };
 }
+
+// TODO: move this to worker
 
 function toAGBR(buffer: Buffer) {
   // freaking slow
@@ -20,7 +23,10 @@ function toAGBR(buffer: Buffer) {
   return result;
 }
 
-export function toDataURI(icon: Icon) {
+export function toDataURI(icon?: Icon) {
+  if (!icon)
+    return null;
+
   const { pixels, height, width } = icon;
   const img = {
     data: toAGBR(pixels),
@@ -47,4 +53,13 @@ function toDevice(dev: Device) {
   return { name, id, icon: toDataURI(icon) };
 }
 
-export { toIcon as icon, toApp as app, toDevice as device };
+function toProcess(proc: Process) {
+  const { pid, name, smallIcon, largeIcon } = proc;
+  return {
+    pid, name,
+    smallIcon: toDataURI(smallIcon),
+    largeIcon: toDataURI(largeIcon),
+  }
+}
+
+export { toIcon as icon, toApp as app, toDevice as device, toProcess as process };
