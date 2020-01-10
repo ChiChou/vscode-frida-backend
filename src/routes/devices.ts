@@ -23,7 +23,7 @@ router.delete('/:host', async (ctx) => {
   try {
     await manager.removeRemoteDevice(host);
   } catch(e) {
-    ctx.throw(404);
+    ctx.throw(404, e.message, { expose: true });
   }
   ctx.body = 'OK';
 });
