@@ -1,7 +1,9 @@
 import * as frida from 'frida';
 import * as Router from 'koa-router';
+import { Context } from 'koa';
 
 import * as serializer from '../serializer';
+import { getDeviceById } from '../middlewares/get_device';
 
 const router = new Router();
 
@@ -28,22 +30,14 @@ router.delete('/:host', async (ctx) => {
   ctx.body = 'OK';
 });
 
-type HandlerRoutine = (ctx: any, device: frida.Device) => any;
+router.get('/:device/apps', getDeviceById, async (ctx: Context) => {
+  const apps = await ctx.device.enumerateApplications();
+  ctx.body = apps.map(serializer.app);
+});
 
-const getDeviceByIdMiddleware = (handler: HandlerRoutine) => async (ctx) => {
-  const { id } = ctx.params;
-  const device = await (id === 'usb' ? frida.getUsbDevice() : frida.getDevice(id));
-  ctx.body = await handler(ctx, device);
-};
-
-router.get('/:id/apps', getDeviceByIdMiddleware(async (_ctx, device) => {
-  const apps = await device.enumerateApplications();
-  return apps.map(serializer.app);
-}));
-
-router.get('/:id/ps', getDeviceByIdMiddleware(async (_ctx, device) => {
-  const ps = await device.enumerateProcesses();
-  return ps.map(serializer.process);
-}));
+router.get('/:device/ps', getDeviceById, async (ctx: Context) => {
+  const ps = await ctx.device.enumerateProcesses();
+  ctx.body = ps.map(serializer.process);
+});
 
 export default router;

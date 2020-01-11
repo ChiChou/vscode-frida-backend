@@ -1,4 +1,8 @@
 import * as supertest from 'supertest';
+// import * as frida from 'frida';
+// import * as path from 'path';
+
+// import { promises as fs } from 'fs';
 import { start } from '../src/server';
 
 
@@ -26,7 +30,14 @@ describe('frida backend', () => {
     expect(apps.body).toBeInstanceOf(Array);
     const ps = await request.get('/device/usb/ps').expect(200);
     expect(ps.body).toBeInstanceOf(Array);
-  })
+
+    // tslint:disable-next-line: no-suspicious-comment
+    // bug: this test case never finish
+    // const proc = (ps.body as Process[]).find(p => p.name === 'SpringBoard');
+    // const hierarchy = await request.get(`/script/usb/run/${proc.pid}/ping`).expect(200);
+    // expect(hierarchy.body).toBeInstanceOf(Object);
+    // console.log(hierarchy.body);
+  });
 
   afterAll(async(done) => {
     app.close();
