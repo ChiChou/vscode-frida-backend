@@ -27,6 +27,9 @@ function normalize(path: string) : string {
 type Node = { [key: string]: Node };
 
 export function hierarchy() {
+  if (Process.platform !== 'darwin' || !ObjC.available)
+    throw new Error('Objective C runtime not found. This function only works for Darwin');
+
   const root = normalize(ObjC.classes.NSBundle.mainBundle().bundlePath()).toString();
   const modules = Process.enumerateModules()
     .filter((mod: Module) => normalize(mod.path).startsWith(root))
