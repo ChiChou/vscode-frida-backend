@@ -16,7 +16,6 @@
     "@types/supertest": "^2.0.8",
     "@typescript-eslint/eslint-plugin": "~2.14.0",
     "@typescript-eslint/parser": "~2.14.0",
-    "bmp-js": "^0.1.0",
     "eslint": "~6.8.0",
     "eslint-config-prettier": "~6.9.0",
     "eslint-plugin-jest": "~23.2.0",
@@ -43,6 +42,7 @@
   "license": "MIT",
   "dependencies": {
     "debug": "^4.1.1",
+    "fast-png": "^5.0.1",
     "frida": "^12.8.6",
     "koa": "^2.11.0",
     "koa-router": "^7.4.0",

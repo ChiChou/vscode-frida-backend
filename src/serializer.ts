@@ -1,5 +1,6 @@
+import * as png from 'fast-png';
+
 import { Icon, Application, Device } from 'frida';
-import * as BMP from 'bmp-js';
 import { Process } from 'frida/dist/process';
 
 function toIcon(icon?: Icon): any {
@@ -11,30 +12,18 @@ function toIcon(icon?: Icon): any {
 
 // TODO: move this to worker
 
-function toAGBR(buffer: Buffer) {
-  // freaking slow
-  const result = Buffer.allocUnsafe(buffer.length);
-  for (let i = 0; i < buffer.length; i += 4) {
-    result[i + 0] = buffer[i + 3];
-    result[i + 1] = buffer[i + 2];
-    result[i + 2] = buffer[i + 1];
-    result[i + 3] = buffer[i + 0];
-  }
-  return result;
-}
-
 export function toDataURI(icon?: Icon) {
   if (!icon)
     return null;
 
   const { pixels, height, width } = icon;
-  const img = {
-    data: toAGBR(pixels),
+  const img = png.encode({
     width,
-    height
-  };
-
-  return 'data:image/bmp;base64,' + BMP.encode(img).data.toString('base64');
+    height,
+    data: pixels
+  });
+  
+  return 'data:image/png;base64,' + Buffer.from(img).toString('base64');
 }
 
 function toApp(app: Application) {
