@@ -11,6 +11,7 @@
   "main": "build/src/cli.js",
   "repository": "https://github.com/ChiChou/vscode-frida-backend.git",
   "devDependencies": {
+    "@types/frida-gum": "^15.0.0",
     "@types/jest": "~24.0.25",
     "@types/node": "~12.12.22",
     "@types/supertest": "^2.0.8",
@@ -19,6 +20,7 @@
     "eslint": "~6.8.0",
     "eslint-config-prettier": "~6.9.0",
     "eslint-plugin-jest": "~23.2.0",
+    "frida-compile": "^9.1.0",
     "jest": "~24.9.0",
     "prettier": "~1.19.1",
     "rimraf": "~3.0.0",
@@ -36,7 +38,9 @@
     "build:watch": "tsc -w -p tsconfig.release.json",
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "agent:build": "cd agent && frida-compile src/index.ts -o build/agent.js",
+    "agent:watch": "npm run agent:build -- -w"
   },
   "author": "CodeColorist <codecolorist@gmail.com>",
   "license": "MIT",
