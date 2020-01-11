@@ -49,8 +49,8 @@ function toApp(app: Application) {
 }
 
 function toDevice(dev: Device) {
-  const { name, id, icon } = dev;
-  return { name, id, icon: toDataURI(icon) };
+  const { name, id, /*icon, */ type } = dev;
+  return { name, id, /* icon: toDataURI(icon),*/ type };
 }
 
 function toProcess(proc: Process) {

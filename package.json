@@ -5,6 +5,10 @@
   "engines": {
     "node": ">= 12.13 <13"
   },
+  "bin": {
+    "vscode-frida-server": "build/src/cli.js"
+  },
+  "main": "build/src/cli.js",
   "repository": "https://github.com/ChiChou/vscode-frida-backend.git",
   "devDependencies": {
     "@types/jest": "~24.0.25",
