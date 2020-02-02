@@ -34,9 +34,9 @@ describe('frida backend', () => {
     // tslint:disable-next-line: no-suspicious-comment
     // bug: this test case never finish
     // const proc = (ps.body as Process[]).find(p => p.name === 'SpringBoard');
-    // const hierarchy = await request.get(`/script/usb/run/${proc.pid}/ping`).expect(200);
-    // expect(hierarchy.body).toBeInstanceOf(Object);
-    // console.log(hierarchy.body);
+    const hierarchy = await request.get(`/script/usb/run/SpringBoard/ping`).expect(200);
+    expect(hierarchy.body).toBeInstanceOf(Object);
+    console.log(hierarchy.body);
   });
 
   afterAll(async(done) => {

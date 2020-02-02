@@ -14,9 +14,7 @@ const cache = {
 
 router.get('/:device/run/:pid/:rpc', getDeviceById, async (ctx: Context) => {
   const pid = parseInt(ctx.params.pid);
-  if (isNaN(pid)) {
-    ctx.throw(400, 'Invalid pid');
-  }
+  const target = isNaN(pid) ? ctx.params.pid : pid;
 
   if (!cache.source) {
     const filename = path.join(__dirname, '..', '..', 'agent', 'build', 'agent.js');
@@ -24,12 +22,10 @@ router.get('/:device/run/:pid/:rpc', getDeviceById, async (ctx: Context) => {
     cache.source = (await fs.readFile(filename)).toString();
   }
 
-  const session = await (ctx.device as frida.Device).attach(pid);
+  const session = await (ctx.device as frida.Device).attach(target);
   const script = await session.createScript(cache.source);
   await script.load();
-  
   ctx.body = await script.exports[ctx.params.rpc]();
-
   await session.detach();
 });
 
